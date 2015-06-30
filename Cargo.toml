@@ -7,3 +7,6 @@ repository = "https://github.com/stainless-steel/dwt"
 homepage = "https://github.com/stainless-steel/dwt"
 description = """
 The package provides an algorithm to compute the discrete wavelet transform."""
+
+[dev-dependencies]
+assert = "*"
