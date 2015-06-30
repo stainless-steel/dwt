@@ -1,0 +1,8 @@
+[package]
+name = "dwt"
+version = "0.0.1"
+authors = ["Ivan Ukhov <ivan.ukhov@gmail.com>"]
+license = "MIT"
+repository = "https://github.com/hilbert-space/dwt"
+homepage = "https://github.com/hilbert-space/dwt"
+description = "DWT."
