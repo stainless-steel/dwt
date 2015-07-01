@@ -10,10 +10,15 @@ pub mod wavelet;
 use wavelet::Wavelet;
 
 macro_rules! power_of_two(
-    ($data:expr) => (match $data.len() {
-        n if n < 2 => return,
-        n if n & (n - 1) != 0 => panic!("expected the number of points to be a power of two"),
-        n => n,
+    ($data:expr, $level:expr) => ({
+        if $level == 0 {
+            return;
+        }
+        let n = $data.len();
+        if n % (1 << $level) != 0 {
+            panic!("expected the number of points to be divisible by 2^level");
+        }
+        n
     });
 );
 
@@ -41,27 +46,23 @@ macro_rules! zero(
 
 /// Perform the forward transformation.
 ///
-/// The number of points should be a power of two.
-pub fn forward(data: &mut [f64], wavelet: &Wavelet) {
-    let n = power_of_two!(data);
+/// The number of points should be divisible by `2^level`.
+pub fn forward(data: &mut [f64], wavelet: &Wavelet, level: usize) {
+    let n = power_of_two!(data, level);
     let mut work = dirty_buffer!(n);
-    let mut i = n;
-    while i >= 2 {
-        forward_step(data, wavelet, i, &mut work);
-        i >>= 1;
+    for i in 0..level {
+        forward_step(data, wavelet, n >> i, &mut work);
     }
 }
 
 /// Perform the inverse transformation.
 ///
-/// The number of points should be a power of two.
-pub fn inverse(data: &mut [f64], wavelet: &Wavelet) {
-    let n = power_of_two!(data);
+/// The number of points should be divisible by `2^level`.
+pub fn inverse(data: &mut [f64], wavelet: &Wavelet, level: usize) {
+    let n = power_of_two!(data, level);
     let mut work = dirty_buffer!(n);
-    let mut i = 2;
-    while i <= n {
-        inverse_step(data, wavelet, i, &mut work);
-        i <<= 1;
+    for i in 0..level {
+        inverse_step(data, wavelet, n >> (level - i - 1), &mut work);
     }
 }
 

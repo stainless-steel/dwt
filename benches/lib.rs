@@ -15,5 +15,6 @@ use test::{Bencher, black_box};
 fn forward_haar(size: usize, bencher: &mut Bencher) {
     let mut data = vec![42.0; size];
     let wavelet = dwt::wavelet::Haar::new();
-    bencher.iter(|| black_box(dwt::forward(&mut data, &wavelet)));
+    let level = (size as f64).log2() as usize;
+    bencher.iter(|| black_box(dwt::forward(&mut data, &wavelet, level)));
 }
