@@ -73,12 +73,12 @@ pub fn inverse(data: &mut [f64], wavelet: &Wavelet, level: usize) {
 fn forward_step(data: &mut [f64], wavelet: &Wavelet, n: usize, work: &mut [f64]) {
     zero!(work);
     let nm = wavelet.length * n - wavelet.offset;
-    let (n1, nh) = (n - 1, n >> 1);
+    let nh = n >> 1;
     for i in 0..nh {
         let (mut h, mut g) = (0.0, 0.0);
-        let n = 2 * i + nm;
+        let k = 2 * i + nm;
         for j in 0..wavelet.length {
-            let k = n1 & (n + j);
+            let k = (k + j) % n;
             h += wavelet.dec_lo[j] * data[k];
             g += wavelet.dec_hi[j] * data[k];
         }
@@ -92,12 +92,12 @@ fn forward_step(data: &mut [f64], wavelet: &Wavelet, n: usize, work: &mut [f64])
 fn inverse_step(data: &mut [f64], wavelet: &Wavelet, n: usize, work: &mut [f64]) {
     zero!(work);
     let nm = wavelet.length * n - wavelet.offset;
-    let (n1, nh) = (n - 1, n >> 1);
+    let nh = n >> 1;
     for i in 0..nh {
         let (h, g) = (data[i], data[i + nh]);
-        let n = 2 * i + nm;
+        let k = 2 * i + nm;
         for j in 0..wavelet.length {
-            let k = n1 & (n + j);
+            let k = (k + j) % n;
             work[k] += wavelet.rec_lo[j] * h + wavelet.rec_hi[j] * g;
         }
     }
