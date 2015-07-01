@@ -3,6 +3,8 @@
 The package provides an algorithm to compute the [discrete wavelet
 transform][1].
 
+## [Documentation][doc]
+
 ## Contributing
 
 1. Fork the project.
