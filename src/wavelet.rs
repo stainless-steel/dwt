@@ -16,14 +16,14 @@ pub struct Haar;
 impl Haar {
     /// Create a wavelet.
     pub fn new() -> Wavelet {
-        use std::f64::consts::SQRT_2;
+        use std::f64::consts::FRAC_1_SQRT_2;
         Wavelet {
             length: 2,
             offset: 0,
-            h1: vec![1.0 / SQRT_2, 1.0 / SQRT_2],
-            g1: vec![1.0 / SQRT_2, -1.0 / SQRT_2],
-            h2: vec![1.0 / SQRT_2, 1.0 / SQRT_2],
-            g2: vec![1.0 / SQRT_2, -1.0 / SQRT_2],
+            h1: vec![FRAC_1_SQRT_2, FRAC_1_SQRT_2],
+            g1: vec![FRAC_1_SQRT_2, -FRAC_1_SQRT_2],
+            h2: vec![FRAC_1_SQRT_2, FRAC_1_SQRT_2],
+            g2: vec![FRAC_1_SQRT_2, -FRAC_1_SQRT_2],
         }
     }
 }
