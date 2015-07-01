@@ -76,8 +76,8 @@ fn forward_step(data: &mut [f64], wavelet: &Wavelet, n: usize, work: &mut [f64])
         let n = 2 * i + nm;
         for j in 0..wavelet.length {
             let k = n1 & (n + j);
-            h += wavelet.h1[j] * data[k];
-            g += wavelet.g1[j] * data[k];
+            h += wavelet.lo_dec[j] * data[k];
+            g += wavelet.hi_dec[j] * data[k];
         }
         work[i] += h;
         work[i + nh] += g;
@@ -95,7 +95,7 @@ fn inverse_step(data: &mut [f64], wavelet: &Wavelet, n: usize, work: &mut [f64])
         let n = 2 * i + nm;
         for j in 0..wavelet.length {
             let k = n1 & (n + j);
-            work[k] += wavelet.h2[j] * h + wavelet.g2[j] * g;
+            work[k] += wavelet.lo_rec[j] * h + wavelet.hi_rec[j] * g;
         }
     }
     copy!(work, data, n);

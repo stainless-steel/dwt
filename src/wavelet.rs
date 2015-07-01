@@ -2,12 +2,20 @@
 
 /// A wavelet.
 pub struct Wavelet {
+    /// The number of coefficients.
     pub length: usize,
+    /// The offset of the coefficients.
     pub offset: usize,
-    pub h1: Vec<f64>,
-    pub g1: Vec<f64>,
-    pub h2: Vec<f64>,
-    pub g2: Vec<f64>,
+
+    /// The coefficients of the decomposition low-pass filter.
+    pub lo_dec: Vec<f64>,
+    /// The coefficients of the decomposition high-pass filter.
+    pub hi_dec: Vec<f64>,
+
+    /// The coefficients of the reconstruction low-pass filter.
+    pub lo_rec: Vec<f64>,
+    /// The coefficients of the reconstruction high-pass filter.
+    pub hi_rec: Vec<f64>,
 }
 
 /// A Haar wavelet.
@@ -20,10 +28,10 @@ impl Haar {
         Wavelet {
             length: 2,
             offset: 0,
-            h1: vec![FRAC_1_SQRT_2, FRAC_1_SQRT_2],
-            g1: vec![FRAC_1_SQRT_2, -FRAC_1_SQRT_2],
-            h2: vec![FRAC_1_SQRT_2, FRAC_1_SQRT_2],
-            g2: vec![FRAC_1_SQRT_2, -FRAC_1_SQRT_2],
+            lo_dec: vec![FRAC_1_SQRT_2, FRAC_1_SQRT_2],
+            hi_dec: vec![FRAC_1_SQRT_2, -FRAC_1_SQRT_2],
+            lo_rec: vec![FRAC_1_SQRT_2, FRAC_1_SQRT_2],
+            hi_rec: vec![FRAC_1_SQRT_2, -FRAC_1_SQRT_2],
         }
     }
 }
