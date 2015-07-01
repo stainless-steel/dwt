@@ -35,8 +35,8 @@ macro_rules! copy(
 macro_rules! zero(
     ($buffer:expr) => ({
         use std::ptr::write_bytes as write;
-        use std::mem::size_of;
-        unsafe { write($buffer.as_mut_ptr(), 0, size_of::<f64>() * $buffer.len()) };
+        const SIZE_OF_F64: usize = 8;
+        unsafe { write($buffer.as_mut_ptr(), 0, SIZE_OF_F64 * $buffer.len()) };
     });
 );
 
