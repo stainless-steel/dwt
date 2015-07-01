@@ -1,10 +1,11 @@
 [package]
 name = "dwt"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Ivan Ukhov <ivan.ukhov@gmail.com>"]
 license = "MIT"
 repository = "https://github.com/stainless-steel/dwt"
 homepage = "https://github.com/stainless-steel/dwt"
+documentation = "https://stainless-steel.github.io/dwt"
 description = """
 The package provides an algorithm to compute the discrete wavelet transform."""
 
