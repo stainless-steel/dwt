@@ -46,7 +46,9 @@ macro_rules! zero(
 
 /// Perform the forward transformation.
 ///
-/// The number of points should be divisible by `2^level`.
+/// The number of points should be divisible by `2^level`. The data are replaced
+/// by the approximation and detail coefficients stored in the first and second
+/// halves of `data`, respectively.
 pub fn forward(data: &mut [f64], wavelet: &Wavelet, level: usize) {
     let n = power_of_two!(data, level);
     let mut work = dirty_buffer!(n);
@@ -57,7 +59,9 @@ pub fn forward(data: &mut [f64], wavelet: &Wavelet, level: usize) {
 
 /// Perform the inverse transformation.
 ///
-/// The number of points should be divisible by `2^level`.
+/// The number of points should be divisible by `2^level`. The data are replaced
+/// by the approximation and detail coefficients stored in the first and second
+/// halves of `data`, respectively.
 pub fn inverse(data: &mut [f64], wavelet: &Wavelet, level: usize) {
     let n = power_of_two!(data, level);
     let mut work = dirty_buffer!(n);
