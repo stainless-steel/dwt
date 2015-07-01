@@ -1,3 +1,5 @@
+//! Wavelets.
+
 /// A wavelet.
 pub struct Wavelet {
     pub length: usize,

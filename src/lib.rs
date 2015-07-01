@@ -26,18 +26,17 @@ macro_rules! dirty_buffer(
 );
 
 macro_rules! copy(
-    ($source:ident, $destination:ident, $n:expr) => (
-        for i in 0..$n {
-            $destination[i] = $source[i];
-        }
-    );
+    ($source:ident, $destination:ident, $n:expr) => ({
+        use std::ptr::copy_nonoverlapping as copy;
+        unsafe { copy($source.as_ptr(), $destination.as_mut_ptr(), $n) };
+    });
 );
 
 macro_rules! zero(
     ($buffer:expr) => ({
-        for x in $buffer.iter_mut() {
-            *x = 0.0;
-        }
+        use std::ptr::write_bytes as write;
+        use std::mem::size_of;
+        unsafe { write($buffer.as_mut_ptr(), 0, size_of::<f64>() * $buffer.len()) };
     });
 );
 
@@ -72,19 +71,16 @@ fn forward_step(data: &mut [f64], wavelet: &Wavelet, n: usize, work: &mut [f64])
     zero!(work);
     let nmod = wavelet.length * n - wavelet.offset;
     let (n1, nh) = (n - 1, n >> 1);
-    let (mut i, mut ii) = (0, 0);
-    while i < n {
+    for i in 0..nh {
         let (mut h, mut g) = (0.0, 0.0);
-        let ni = i + nmod;
-        for k in 0..wavelet.length {
-            let jf = n1 & (ni + k);
-            h += wavelet.h1[k] * data[jf];
-            g += wavelet.g1[k] * data[jf];
+        let n = 2 * i + nmod;
+        for j in 0..wavelet.length {
+            let k = n1 & (n + j);
+            h += wavelet.h1[j] * data[k];
+            g += wavelet.g1[j] * data[k];
         }
-        work[ii] += h;
-        work[ii + nh] += g;
-        i += 2;
-        ii += 1;
+        work[i] += h;
+        work[i + nh] += g;
     }
     copy!(work, data, n);
 }
@@ -94,17 +90,13 @@ fn inverse_step(data: &mut [f64], wavelet: &Wavelet, n: usize, work: &mut [f64])
     zero!(work);
     let nmod = wavelet.length * n - wavelet.offset;
     let (n1, nh) = (n - 1, n >> 1);
-    let (mut i, mut ii) = (0, 0);
-    while i < n {
-        let ai = data[ii];
-        let ai1 = data[ii + nh];
-        let ni = i + nmod;
-        for k in 0..wavelet.length {
-            let jf = n1 & (ni + k);
-            work[jf] += wavelet.h2[k] * ai + wavelet.g2[k] * ai1;
+    for i in 0..nh {
+        let (h, g) = (data[i], data[i + nh]);
+        let n = 2 * i + nmod;
+        for j in 0..wavelet.length {
+            let k = n1 & (n + j);
+            work[k] += wavelet.h2[j] * h + wavelet.g2[j] * g;
         }
-        i += 2;
-        ii += 1;
     }
     copy!(work, data, n);
 }
