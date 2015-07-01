@@ -59,9 +59,8 @@ pub fn forward(data: &mut [f64], wavelet: &Wavelet, level: usize) {
 
 /// Perform the inverse transformation.
 ///
-/// The number of points should be divisible by `2^level`. The data are replaced
-/// by the approximation and detail coefficients stored in the first and second
-/// halves of `data`, respectively.
+/// The number of points should be divisible by `2^level`. The approximation and
+/// detail coefficients should be stored as described in `forward`.
 pub fn inverse(data: &mut [f64], wavelet: &Wavelet, level: usize) {
     let n = power_of_two!(data, level);
     let mut work = dirty_buffer!(n);
