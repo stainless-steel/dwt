@@ -13,7 +13,7 @@ transform][1].
 
 [1]: https://en.wikipedia.org/wiki/Discrete_wavelet_transform
 
-[version-img]: https://img.shields.io/crates/v/dwt.svg
+[version-img]: http://stainless-steel.github.io/images/crates.svg
 [version-url]: https://crates.io/crates/dwt
 [status-img]: https://travis-ci.org/stainless-steel/dwt.svg?branch=master
 [status-url]: https://travis-ci.org/stainless-steel/dwt
