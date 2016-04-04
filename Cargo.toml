@@ -1,13 +1,12 @@
 [package]
 name = "dwt"
 version = "0.3.0"
+license = "Apache-2.0/MIT"
 authors = ["Ivan Ukhov <ivan.ukhov@gmail.com>"]
-license = "MIT"
-repository = "https://github.com/stainless-steel/dwt"
-homepage = "https://github.com/stainless-steel/dwt"
+description = "The package provides an algorithm to compute the discrete wavelet transform."
 documentation = "https://stainless-steel.github.io/dwt"
-description = """
-The package provides an algorithm to compute the discrete wavelet transform."""
+homepage = "https://github.com/stainless-steel/dwt"
+repository = "https://github.com/stainless-steel/dwt"
 
 [dev-dependencies]
 assert = "*"
