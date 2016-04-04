@@ -9,4 +9,4 @@ homepage = "https://github.com/stainless-steel/dwt"
 repository = "https://github.com/stainless-steel/dwt"
 
 [dev-dependencies]
-assert = "*"
+assert = "0.6"
