@@ -5,9 +5,13 @@
 // The implementation is based on:
 // http://www.gnu.org/software/gsl/manual/html_node/Wavelet-Transforms.html
 
+mod float;
+
 pub mod wavelet;
 
 use wavelet::Wavelet;
+
+pub use float::Float;
 
 macro_rules! power_of_two(
     ($data:expr, $level:expr) => ({
@@ -49,7 +53,7 @@ macro_rules! zero(
 /// The number of points should be divisible by `2^level`. The data are replaced
 /// by the approximation and detail coefficients stored in the first and second
 /// halves of `data`, respectively.
-pub fn forward(data: &mut [f64], wavelet: &Wavelet, level: usize) {
+pub fn forward<T>(data: &mut [T], wavelet: &Wavelet<T>, level: usize) where T: Float {
     let n = power_of_two!(data, level);
     let mut work = dirty_buffer!(n);
     for i in 0..level {
@@ -61,7 +65,7 @@ pub fn forward(data: &mut [f64], wavelet: &Wavelet, level: usize) {
 ///
 /// The number of points should be divisible by `2^level`. The approximation and
 /// detail coefficients should be stored as described in `forward`.
-pub fn inverse(data: &mut [f64], wavelet: &Wavelet, level: usize) {
+pub fn inverse<T>(data: &mut [T], wavelet: &Wavelet<T>, level: usize) where T: Float {
     let n = power_of_two!(data, level);
     let mut work = dirty_buffer!(n);
     for i in 0..level {
@@ -70,12 +74,12 @@ pub fn inverse(data: &mut [f64], wavelet: &Wavelet, level: usize) {
 }
 
 #[inline(always)]
-fn forward_step(data: &mut [f64], wavelet: &Wavelet, n: usize, work: &mut [f64]) {
+fn forward_step<T>(data: &mut [T], wavelet: &Wavelet<T>, n: usize, work: &mut [T]) where T: Float {
     zero!(work);
     let nm = wavelet.length * n - wavelet.offset;
     let nh = n >> 1;
     for i in 0..nh {
-        let (mut h, mut g) = (0.0, 0.0);
+        let (mut h, mut g) = (T::zero(), T::zero());
         let k = 2 * i + nm;
         for j in 0..wavelet.length {
             let k = (k + j) % n;
@@ -89,7 +93,7 @@ fn forward_step(data: &mut [f64], wavelet: &Wavelet, n: usize, work: &mut [f64])
 }
 
 #[inline(always)]
-fn inverse_step(data: &mut [f64], wavelet: &Wavelet, n: usize, work: &mut [f64]) {
+fn inverse_step<T>(data: &mut [T], wavelet: &Wavelet<T>, n: usize, work: &mut [T]) where T: Float {
     zero!(work);
     let nm = wavelet.length * n - wavelet.offset;
     let nh = n >> 1;
