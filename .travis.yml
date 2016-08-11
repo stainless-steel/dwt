@@ -6,6 +6,13 @@ rust:
   - beta
   - nightly
 
+script:
+  - cargo build
+  - cargo test
+  - if [ "$TRAVIS_RUST_VERSION" == "nightly" ]; then
+      cargo bench;
+    fi
+
 after_success:
   - curl https://stainless-steel.github.io/travis/documentation.sh | bash;
 
