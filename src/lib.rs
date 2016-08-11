@@ -13,26 +13,45 @@ use wavelet::Wavelet;
 
 pub use float::Float;
 
-macro_rules! power_of_two(
-    ($data:expr, $level:expr) => ({
-        if $level == 0 {
-            return;
-        }
-        let n = $data.len();
-        if n % (1 << $level) != 0 {
-            panic!("expected the number of points to be divisible by 2^level");
-        }
-        n
-    });
-);
+/// A transform operation.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum Operation {
+    /// The forward transform.
+    Forward,
+    /// The inverse transform.
+    Inverse,
+}
 
-macro_rules! dirty_buffer(
-    ($n:expr) => ({
-        let mut buffer = Vec::with_capacity($n);
-        unsafe { buffer.set_len($n) };
-        buffer
-    });
-);
+/// Perform the transform.
+///
+/// The number of points should be divisible by `2^level`. If the operation is
+/// forward, the data are replaced by the approximation and detail coefficients
+/// stored in the first and second halves of `data`, respectively. If the
+/// operation is inverse, the data are assumed to be stored according to the
+/// above convention.
+pub fn transform<T>(data: &mut [T], operation: Operation, wavelet: &Wavelet<T>, level: usize)
+    where T: Float
+{
+    if level == 0 {
+        return;
+    }
+    let n = data.len();
+    assert!(n % (1 << level) == 0);
+    let mut work = Vec::with_capacity(n);
+    unsafe { work.set_len(n) };
+    match operation {
+        Operation::Forward => {
+            for i in 0..level {
+                forward_step(data, wavelet, n >> i, &mut work);
+            }
+        },
+        Operation::Inverse => {
+            for i in 0..level {
+                inverse_step(data, wavelet, n >> (level - i - 1), &mut work);
+            }
+        },
+    }
+}
 
 macro_rules! copy(
     ($source:ident, $destination:ident, $n:expr) => ({
@@ -48,33 +67,10 @@ macro_rules! zero(
     });
 );
 
-/// Perform the forward transformation.
-///
-/// The number of points should be divisible by `2^level`. The data are replaced
-/// by the approximation and detail coefficients stored in the first and second
-/// halves of `data`, respectively.
-pub fn forward<T>(data: &mut [T], wavelet: &Wavelet<T>, level: usize) where T: Float {
-    let n = power_of_two!(data, level);
-    let mut work = dirty_buffer!(n);
-    for i in 0..level {
-        forward_step(data, wavelet, n >> i, &mut work);
-    }
-}
-
-/// Perform the inverse transformation.
-///
-/// The number of points should be divisible by `2^level`. The approximation and
-/// detail coefficients should be stored as described in `forward`.
-pub fn inverse<T>(data: &mut [T], wavelet: &Wavelet<T>, level: usize) where T: Float {
-    let n = power_of_two!(data, level);
-    let mut work = dirty_buffer!(n);
-    for i in 0..level {
-        inverse_step(data, wavelet, n >> (level - i - 1), &mut work);
-    }
-}
-
 #[inline(always)]
-fn forward_step<T>(data: &mut [T], wavelet: &Wavelet<T>, n: usize, work: &mut [T]) where T: Float {
+fn forward_step<T>(data: &mut [T], wavelet: &Wavelet<T>, n: usize, work: &mut [T])
+    where T: Float
+{
     zero!(work);
     let nm = wavelet.length * n - wavelet.offset;
     let nh = n >> 1;
@@ -93,7 +89,9 @@ fn forward_step<T>(data: &mut [T], wavelet: &Wavelet<T>, n: usize, work: &mut [T
 }
 
 #[inline(always)]
-fn inverse_step<T>(data: &mut [T], wavelet: &Wavelet<T>, n: usize, work: &mut [T]) where T: Float {
+fn inverse_step<T>(data: &mut [T], wavelet: &Wavelet<T>, n: usize, work: &mut [T])
+    where T: Float
+{
     zero!(work);
     let nm = wavelet.length * n - wavelet.offset;
     let nh = n >> 1;

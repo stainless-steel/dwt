@@ -1,6 +1,8 @@
 extern crate assert;
 extern crate dwt;
 
+use dwt::Operation;
+
 #[test]
 fn forward_haar_40() {
     let data = vec![
@@ -41,7 +43,7 @@ fn forward_haar_40() {
 
     {
         let mut data = data.clone();
-        dwt::forward(&mut data, &dwt::wavelet::Haar::new(), 3);
+        dwt::transform(&mut data, Operation::Forward, &dwt::wavelet::Haar::new(), 3);
         assert::close(&data, &expected_data_3[..], 1e-14);
     }
 }
@@ -139,13 +141,13 @@ fn forward_haar_64() {
 
     {
         let mut data = data.clone();
-        dwt::forward(&mut data, &dwt::wavelet::Haar::new(), 6);
+        dwt::transform(&mut data, Operation::Forward, &dwt::wavelet::Haar::new(), 6);
         assert::close(&data, &expected_data_6[..], 1e-14);
     }
 
     {
         let mut data = data.clone();
-        dwt::forward(&mut data, &dwt::wavelet::Haar::new(), 2);
+        dwt::transform(&mut data, Operation::Forward, &dwt::wavelet::Haar::new(), 2);
         assert::close(&data, &expected_data_2[..], 1e-14);
     }
 }
@@ -190,7 +192,7 @@ fn inverse_haar_40() {
 
     {
         let mut data = data.clone();
-        dwt::inverse(&mut data, &dwt::wavelet::Haar::new(), 3);
+        dwt::transform(&mut data, Operation::Inverse, &dwt::wavelet::Haar::new(), 3);
         assert::close(&data, &expected_data_3[..], 1e-14);
     }
 }
@@ -288,13 +290,13 @@ fn inverse_haar_64() {
 
     {
         let mut data = data.clone();
-        dwt::inverse(&mut data, &dwt::wavelet::Haar::new(), 6);
+        dwt::transform(&mut data, Operation::Inverse, &dwt::wavelet::Haar::new(), 6);
         assert::close(&data, &expected_data_6[..], 1e-14);
     }
 
     {
         let mut data = data.clone();
-        dwt::inverse(&mut data, &dwt::wavelet::Haar::new(), 2);
+        dwt::transform(&mut data, Operation::Inverse, &dwt::wavelet::Haar::new(), 2);
         assert::close(&data, &expected_data_2[..], 1e-14);
     }
 }
