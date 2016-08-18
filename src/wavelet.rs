@@ -1,6 +1,6 @@
 //! Wavelets.
 
-use Float;
+use num::{Float, FloatConst};
 
 /// A wavelet.
 pub struct Wavelet<T> {
@@ -25,8 +25,8 @@ pub struct Haar;
 
 impl Haar {
     /// Create a wavelet.
-    pub fn new<T>() -> Wavelet<T> where T: Float {
-        let value = T::frac_1_sqrt_2();
+    pub fn new<T>() -> Wavelet<T> where T: Float + FloatConst {
+        let value = T::FRAC_1_SQRT_2();
         Wavelet {
             length: 2,
             offset: 0,

@@ -1,4 +1,6 @@
-use {Float, Operation};
+use num::Float;
+
+use Operation;
 use wavelet::Wavelet;
 
 /// The transform.
@@ -63,11 +65,11 @@ pub fn forward_step<T>(data: &mut [T], wavelet: &Wavelet<T>, n: usize, work: &mu
         let k = 2 * i + nm;
         for j in 0..wavelet.length {
             let k = (k + j) % n;
-            h += wavelet.dec_lo[j] * data[k];
-            g += wavelet.dec_hi[j] * data[k];
+            h = h + wavelet.dec_lo[j] * data[k];
+            g = g + wavelet.dec_hi[j] * data[k];
         }
-        work[i] += h;
-        work[i + nh] += g;
+        work[i] = work[i] + h;
+        work[i + nh] = work[i + nh] + g;
     }
     copy!(work, data, n);
 }
@@ -84,7 +86,7 @@ pub fn inverse_step<T>(data: &mut [T], wavelet: &Wavelet<T>, n: usize, work: &mu
         let k = 2 * i + nm;
         for j in 0..wavelet.length {
             let k = (k + j) % n;
-            work[k] += wavelet.rec_lo[j] * h + wavelet.rec_hi[j] * g;
+            work[k] = work[k] + wavelet.rec_lo[j] * h + wavelet.rec_hi[j] * g;
         }
     }
     copy!(work, data, n);

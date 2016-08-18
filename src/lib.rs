@@ -5,14 +5,16 @@
 // The implementation is based on:
 // http://www.gnu.org/software/gsl/manual/html_node/Wavelet-Transforms.html
 
-mod float;
+extern crate num_traits as num;
+
+use num::Float;
+
 mod transform;
 
 pub mod wavelet;
 
 use wavelet::Wavelet;
 
-pub use float::Float;
 pub use transform::Transform;
 
 /// A transform operation.
