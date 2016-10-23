@@ -13,12 +13,5 @@ script:
       cargo bench;
     fi
 
-after_success:
-  - curl https://stainless-steel.github.io/travis/documentation.sh | bash;
-
-env:
-  global:
-    - secure: CuHSVly+CtZeuT3kemI6eH2YgSU4ftrWMFGhGvFX7+Rbzo1GUXoODfs9ikBP2fc+HQxifrUhILxPVFyauDQlw8A5nMYAjTLdeNtE3ceKnPw/RpLxDSQarmdsoFfp/kalg8x+k8aaGk84fHXWNUtG3avQo8bpLDN5qxQM68QRwIEqdxnARkwSrkEWIfZwXl14TMvJ75scHzOYhhZCnkRm/d7UxXjHTWOg7aRoVpibAQJszKFsvG8ZtxUa/fTzmvlSVc1Hm2uQURIdGhhdMUG1tEjdSDh7BeR/iL30kIqWn+JYSQ2w6/0iGHt1s5xZTLi1CTu5gDnw8Wr7vGHOLt3lyUdThCABI234Illf85xSfUC4A3GTUo0lXsh4UdCkgX4cxWhuo9yWYrStM4hauXUdxyHMRsvH3lT4PRuSVRYgVIfBNVfr/ydRJuic4dzJbt9W55Zmys7jLgHXyJ4BmMk8oUGVkS1LVzefJyk09kKjh90n3cQuV317/vxQXs2Qeoq4SzT+BN+xnAwP98erk0SqPhD1eC8WHNGO6PQmjeDFFq4Lkw++LMER37IdbyOIX2R3E5mk167WfAYb5CVccrJJh8PP4YZm9N/ZXC6/pYf+JgklnqFpHPE9T0WlbS13NWU1ujFRWPYuwQmyYZfbStspm1diHC1zMUMZ1BNQ7kFt3Uo=
-
 notifications:
   email: false
